@@ -11,17 +11,24 @@ import {
   getJob,
   updateJob,
   deleteJob,
+  showStats,
 } from '../controllers/jobControllers.js'
+import { checkForTestUser } from '../middleware/authMiddleware.js'
 
 //router.get('/',getAllJobs)
 //router.get('/',createJob)
 
+router
+  .route('/')
+  .get(getAllJobs)
+  .post(checkForTestUser, validateJobInput, createAJob)
 
-router.route('/').get(getAllJobs).post(validateJobInput, createAJob)
+router.route('/stats').get(showStats)
+
 router
   .route('/:id')
   .get(validateIdParam, getJob)
-  .patch(validateJobInput, updateJob)
-  .delete(validateIdParam, deleteJob)
+  .patch(checkForTestUser, validateJobInput, updateJob)
+  .delete(checkForTestUser, validateIdParam, deleteJob)
 
 export default router;
